@@ -121,10 +121,11 @@ function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
   }
 
 }
+
 function checkPawnMoves(piece, secondpiece, oldx, oldy, newx, newy){
   //capturing
   if (secondpiece.filled){
-    if (piece.color == WHITE){
+    if (piece.color == WHITE && secondpiece.color == BLACK){
       if (newx == oldx-1 || newx == oldx+1){
         if (oldy-newy == 1){
           return true;
@@ -134,7 +135,7 @@ function checkPawnMoves(piece, secondpiece, oldx, oldy, newx, newy){
         }
       }
     }
-    else {
+    else if (piece.color == BLACK && secondpiece.color == WHITE){
       if (newx == oldx-1 || newx == oldx+1){
         if (newy-oldy == 1){
           return true;
@@ -150,8 +151,14 @@ function checkPawnMoves(piece, secondpiece, oldx, oldy, newx, newy){
   if (newx != oldx){
     return false;
   }
+  //if a piece is directly in front
+  if (secondpiece.filled){
+    console.log('something is in front'); // TODO: get rid of later
+    return false;
+  }
   //if starting move, can move 2 steps
   if (piece.color == WHITE){
+
     if (oldy == 6){
       if (newy == 5 || newy == 4){
         return true;
@@ -181,6 +188,14 @@ function checkPawnMoves(piece, secondpiece, oldx, oldy, newx, newy){
       }
     }
   }
+
+}
+
+function checkKnightMoves(piece, secondpiece, oldx, oldy, newx, newy){
+  if (piece.color == secondpiece.color){
+    return false;
+  }
+  //move left then up
 
 }
 
