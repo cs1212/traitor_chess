@@ -54,6 +54,7 @@ function boardClick(event){
   let y = Math.floor((event.clientY-chessCanvasY)/TILE_SIZE);
 
   let square = board.tiles[y][x];
+  console.log(square.filled);
   //first click must be a chess piece
   if (square.filled && firstClick == true){
     console.log("first click"); // TODO: get rid of this later
@@ -87,32 +88,26 @@ function boardClick(event){
 function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
   switch(firstpiece.piece){
     case 0:
-      //check if capturing a piece
       //check pawn moves
       return checkPawnMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
       break;
     case 1:
-      //check if capturing a piece
       //check knight moves
-
+      return checkKnightMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
       break;
     case 2:
-      //check if capturing a piece
       //check bishop moves
-
+      return checkBishopMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
       break;
     case 3:
-      //check if capturing a piece
       //check rook moves
 
       break;
     case 4:
-      //check if capturing a piece
       //check queen moves
 
      break;
     case 5:
-      //check if capturing a piece
       //check king moves
 
       break;
@@ -195,8 +190,74 @@ function checkKnightMoves(piece, secondpiece, oldx, oldy, newx, newy){
   if (piece.color == secondpiece.color){
     return false;
   }
-  //move left then up
 
+  if ((newx >= 0 || newx <= 7) && (newy >= 0 || newy <= 7)){
+    if ((Math.abs(newx-oldx) == 2) && (Math.abs(newy-oldy) == 1)){
+      return true;
+    }
+    else if ((Math.abs(newy-oldy) == 2) && (Math.abs(newx-oldx) == 1)){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+}
+
+function checkBishopMoves(piece, secondpiece, oldx, oldy, newx, newy){
+  if (piece.color == secondpiece.color){
+    return false;
+  }
+  if ((Math.abs(newx-oldx) == Math.abs(newy-oldy))){
+    //direction left down
+    if (oldx - newx > 0){
+      if (oldy - newy < 0){
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy + i][oldx - i].filled){
+            if (board.tiles[oldy + i][oldx - i].color == piece.color){
+              return false;
+            }
+          }
+        }
+      }
+      //direction left up
+      else{
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy - i][oldx - i].filled){
+            if (board.tiles[oldy - i][oldx - i].color == piece.color){
+              return false;
+            }
+          }
+        }
+      }
+    }
+    //direction right down
+    else{
+      if (oldy - newy < 0){
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy + i][oldx + i].filled){
+            if (board.tiles[oldy + i][oldx + i].color == piece.color){
+              return false;
+            }
+          }
+        }
+      }
+      //direction right up
+      else{
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy - i][oldx + i].filled){
+            if (board.tiles[oldy - i][oldx + i].color == piece.color){
+              return false;
+            }
+          }
+        }
+      }
+    }
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 function drawBoard() {
