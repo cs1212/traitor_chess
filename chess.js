@@ -29,7 +29,9 @@ const piecesCharacters = {
 let chessCanvas;
 let chessCtx;
 let firstClick = true;
+let firstPiece = -1;
 let firstClickCoord = [];
+let valid = false;
 
 document.addEventListener("DOMContentLoaded", onLoad);
 
@@ -52,52 +54,132 @@ function boardClick(event){
   let y = Math.floor((event.clientY-chessCanvasY)/TILE_SIZE);
 
   let square = board.tiles[y][x];
-  if (square.filled){
-    if (firstClick == true){
-      firstClickCoord = [x,y];
-      firstClick = false;
-      return null;
-    } else{
+  //first click must be a chess piece
+  if (square.filled && firstClick == true){
+    console.log("first click"); // TODO: get rid of this later
+    console.log(x,y);
+    firstClickCoord = [x,y];
+    firstClick = false;
+    firstPiece = square;
+    return null;
+  }
+  //second click can be whatever, we check for legal move here
+  else if (firstClick == false){
       firstClick = true;
       let oldX = firstClickCoord[0];
       let oldY = firstClickCoord[1];
-      switch(square.piece){
-        case 0:
-          //check pawn moves
+      console.log("second click"); // TODO: get rid of this later
+      console.log(x,y);
+      if(checkMoves(firstPiece,square,oldX,oldY,x,y)){
+        console.log('hi');
+        board.tiles[y][x] = firstPiece;
+        board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
+        drawBoard();
+        drawPieces();
+      }
+      else{
+        console.log('not a valid move');
+      }
+    }
 
-          break;
-        case 1:
-          //check knight moves
+}
 
-          break;
-        case 2:
-          //check bishop moves
+function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
+  switch(firstpiece.piece){
+    case 0:
+      //check if capturing a piece
+      //check pawn moves
+      return checkPawnMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
+      break;
+    case 1:
+      //check if capturing a piece
+      //check knight moves
 
-          break;
-        case 3:
-          //check rook moves
+      break;
+    case 2:
+      //check if capturing a piece
+      //check bishop moves
 
-          break;
-        case 4:
-          //check queen moves
+      break;
+    case 3:
+      //check if capturing a piece
+      //check rook moves
 
-         break;
-        case 5:
-          //check king moves
+      break;
+    case 4:
+      //check if capturing a piece
+      //check queen moves
 
-          break;
-        default:
+     break;
+    case 5:
+      //check if capturing a piece
+      //check king moves
 
+      break;
+    default:
+
+  }
+
+}
+function checkPawnMoves(piece, secondpiece, oldx, oldy, newx, newy){
+  //capturing
+  if (secondpiece.filled){
+    if (piece.color == WHITE){
+      if (newx == oldx-1 || newx == oldx+1){
+        if (oldy-newy == 1){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+    }
+    else {
+      if (newx == oldx-1 || newx == oldx+1){
+        if (newy-oldy == 1){
+          return true;
+        }
+        else{
+          return false;
+        }
       }
     }
   }
 
-}
-
-function checkPawnMoves(x,y){
-  //starting move, can move 2 steps
-  if (y == 1 || y == 6){
-
+  //pawns can only move up if not capturing
+  if (newx != oldx){
+    return false;
+  }
+  //if starting move, can move 2 steps
+  if (piece.color == WHITE){
+    if (oldy == 6){
+      if (newy == 5 || newy == 4){
+        return true;
+      }
+    }
+    else{
+      if (oldy-newy == 1){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  else{
+    if (oldy == 1){
+      if (newy == 2 || newy == 3){
+        return true;
+      }
+    }
+    else{
+      if (newy - oldy == 1){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   }
 
 }
