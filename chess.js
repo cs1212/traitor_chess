@@ -101,7 +101,7 @@ function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
       break;
     case 3:
       //check rook moves
-
+      return checkRookMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
       break;
     case 4:
       //check queen moves
@@ -272,14 +272,106 @@ function checkRookMoves(piece, secondpiece, oldx, oldy, newx, newy){
   if (oldy == newy){
     let h = oldx - newx;
     //go left
-    if (h < 0){
+    if (h > 0){
       for (let i = 1; i <= Math.abs(h); i++){
-        if (board.tiles[oldy][oldx - i].filled){ // TODO: finish this
-
+        if (board.tiles[oldy][oldx - i].filled && i != Math.abs(h)){ // TODO: finish this
+          return false;
         }
       }
     }
+    //go right
+    else{
+      for (let i = 1; i <= Math.abs(h); i++){
+        if (board.tiles[oldy][oldx + i].filled && i != Math.abs(h)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    return true;
   }
+  //vertical movement
+  else{
+    let v = oldy - newy;
+    //go up
+    if (v > 0){
+      for (let i = 1; i <= Math.abs(v); i++){
+        if (board.tiles[oldy-i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    //go down
+    else{
+      for (let i = 1; i <= Math.abs(v); i++){
+        if (board.tiles[oldy+i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+}
+
+function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
+  if (piece.color == secondpiece.color){
+    return false;
+  }
+  //horizontal movement
+  if (oldy == newy){
+    let h = oldx - newx;
+    //go left
+    if (h > 0){
+      for (let i = 1; i <= Math.abs(h); i++){
+        if (board.tiles[oldy][oldx - i].filled && i != Math.abs(h)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    //go right
+    else{
+      for (let i = 1; i <= Math.abs(h); i++){
+        if (board.tiles[oldy][oldx + i].filled && i != Math.abs(h)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  //vertical movement
+  else if (oldx == newx){
+    let v = oldy - newy;
+    //go up
+    if (v > 0){
+      for (let i = 1; i <= Math.abs(v); i++){
+        if (board.tiles[oldy-i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    //go down
+    else{
+      for (let i = 1; i <= Math.abs(v); i++){
+        if (board.tiles[oldy+i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  //diagonal left side
+  else if (){
+
+    return true;
+  }
+  //diagonal right side
+  else{
+
+    return true;
+  }
+}
+
+function checkKingMoves(piece, secondpiece, oldx, oldy, newx, newy){
+
 }
 
 function drawBoard() {
