@@ -213,20 +213,22 @@ function checkBishopMoves(piece, secondpiece, oldx, oldy, newx, newy){
     if (oldx - newx > 0){
       if (oldy - newy < 0){
         for (let i = 1; i<=Math.abs(newx-oldx); i++){
-          if (board.tiles[oldy + i][oldx - i].filled){
-            if (board.tiles[oldy + i][oldx - i].color == piece.color){
-              return false;
-            }
+          if (board.tiles[oldy + i][oldx - i].filled && i != Math.abs(newx-oldx)){
+            return false;
+            // if (board.tiles[oldy + i][oldx - i].color == piece.color){
+            //   return false;
+            // }
           }
         }
       }
       //direction left up
       else{
         for (let i = 1; i<=Math.abs(newx-oldx); i++){
-          if (board.tiles[oldy - i][oldx - i].filled){
-            if (board.tiles[oldy - i][oldx - i].color == piece.color){
-              return false;
-            }
+          if (board.tiles[oldy - i][oldx - i].filled && i != Math.abs(newx-oldx)){
+            return false;
+            // if (board.tiles[oldy - i][oldx - i].color == piece.color){
+            //   return false;
+            // }
           }
         }
       }
@@ -235,20 +237,22 @@ function checkBishopMoves(piece, secondpiece, oldx, oldy, newx, newy){
     else{
       if (oldy - newy < 0){
         for (let i = 1; i<=Math.abs(newx-oldx); i++){
-          if (board.tiles[oldy + i][oldx + i].filled){
-            if (board.tiles[oldy + i][oldx + i].color == piece.color){
-              return false;
-            }
+          if (board.tiles[oldy + i][oldx + i].filled && i != Math.abs(newx-oldx)){
+            return false;
+            // if (board.tiles[oldy + i][oldx + i].color == piece.color){
+            //   return false;
+            // }
           }
         }
       }
       //direction right up
       else{
         for (let i = 1; i<=Math.abs(newx-oldx); i++){
-          if (board.tiles[oldy - i][oldx + i].filled){
-            if (board.tiles[oldy - i][oldx + i].color == piece.color){
-              return false;
-            }
+          if (board.tiles[oldy - i][oldx + i].filled && i != Math.abs(newx-oldx)){
+            return false;
+            // if (board.tiles[oldy - i][oldx + i].color == piece.color){
+            //   return false;
+            // }
           }
         }
       }
@@ -257,6 +261,24 @@ function checkBishopMoves(piece, secondpiece, oldx, oldy, newx, newy){
   }
   else{
     return false;
+  }
+}
+
+function checkRookMoves(piece, secondpiece, oldx, oldy, newx, newy){
+  if (piece.color == secondpiece.color){
+    return false;
+  }
+  //horizontal movement
+  if (oldy == newy){
+    let h = oldx - newx;
+    //go left
+    if (h < 0){
+      for (let i = 1; i <= Math.abs(h); i++){
+        if (board.tiles[oldy][oldx - i].filled){ // TODO: finish this
+
+        }
+      }
+    }
   }
 }
 
