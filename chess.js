@@ -42,6 +42,7 @@ function onLoad() {
     board = new Board;
     drawBoard();
     drawPieces();
+    document.getElementById("restart").onclick=restartGame;
 }
 
 function boardClick(event){
@@ -72,11 +73,14 @@ function boardClick(event){
       console.log("second click"); // TODO: get rid of this later
       console.log(x,y);
       if(checkMoves(firstPiece,square,oldX,oldY,x,y)){
-        console.log('hi');
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         drawBoard();
         drawPieces();
+        if (square.piece == 5){
+          console.log('checkmate!');
+          restartGame(); // TODO: add this
+        }
       }
       else{
         console.log('not a valid move');
@@ -109,7 +113,7 @@ function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
      break;
     case 5:
       //check king moves
-
+      return checkKingMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
       break;
     default:
 
@@ -407,7 +411,23 @@ function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
 }
 
 function checkKingMoves(piece, secondpiece, oldx, oldy, newx, newy){
+  if (piece.color == secondpiece.color){
+    return false;
+  }
+  x = Math.abs(oldx-newx);
+  y = Math.abs(oldy-newy);
+  if (x > 1 || y > 1){
+    return false
+  }
+  else{
+    return true;
+  }
+}
 
+function restartGame(){
+  board = new Board;
+  drawBoard();
+  drawPieces();
 }
 
 function drawBoard() {
