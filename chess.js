@@ -105,7 +105,7 @@ function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
       break;
     case 4:
       //check queen moves
-
+      return checkQueenMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
      break;
     case 5:
       //check king moves
@@ -358,15 +358,51 @@ function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
     }
     return true;
   }
-  //diagonal left side
-  else if (){
-
+  //diagonal
+  else if ((Math.abs(newx-oldx) == Math.abs(newy-oldy))){
+    //direction left down
+    if (oldx - newx > 0){
+      if (oldy - newy < 0){
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy + i][oldx - i].filled && i != Math.abs(newx-oldx)){
+            return false;
+            // if (board.tiles[oldy + i][oldx - i].color == piece.color){
+            //   return false;
+            // }
+          }
+        }
+      }
+      //direction left up
+      else{
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy - i][oldx - i].filled && i != Math.abs(newx-oldx)){
+            return false;
+          }
+        }
+      }
+    }
+    //direction right down
+    else{
+      if (oldy - newy < 0){
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy + i][oldx + i].filled && i != Math.abs(newx-oldx)){
+            return false;
+          }
+        }
+      }
+      //direction right up
+      else{
+        for (let i = 1; i<=Math.abs(newx-oldx); i++){
+          if (board.tiles[oldy - i][oldx + i].filled && i != Math.abs(newx-oldx)){
+            return false;
+          }
+        }
+      }
+    }
     return true;
   }
-  //diagonal right side
   else{
-
-    return true;
+    return false;
   }
 }
 
