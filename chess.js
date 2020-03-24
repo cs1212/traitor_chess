@@ -99,8 +99,15 @@ function boardClick(event){
         }
         if (square.piece == 5){
           console.log('checkmate!');
-          // TODO: add this functionality
-          //restartGame();
+          let winner;
+          if (turn == WHITE){
+            winner = "BLACK";
+          }
+          else{
+            winner = "WHITE";
+          }
+          document.getElementById("currentteam").innerHTML = "Winner: " + winner;
+          return null;
         }
 
         updatePieceList(square,whitePieces,whiteDeath,blackPieces,blackDeath);
@@ -189,7 +196,6 @@ function checkPawnMoves(piece, secondpiece, oldx, oldy, newx, newy){
   }
   //if starting move, can move 2 steps
   if (piece.color == WHITE){
-
     if (oldy == 6){
       if (newy == 5 || newy == 4){
         return true;
