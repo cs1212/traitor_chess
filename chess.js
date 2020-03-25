@@ -89,6 +89,9 @@ function boardClick(event){
       console.log("second click"); // TODO: get rid of this later
       console.log(x,y);
       if(checkMoves(firstPiece,square,oldX,oldY,x,y)){
+        //let cloneboard = Object.assign({},board);
+        //prevBoard.push(cloneboard);
+        console.log(prevBoard);
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (turn == WHITE){
