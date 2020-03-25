@@ -3,6 +3,7 @@
     <title>Chess</title>
     <meta charset="UTF-8">
     <script type="text/javascript" src="./chess.js"></script>
+    <link rel="stylesheet" href="styles.css">
 	<style>
 		h1,h2,h3{
 			text-align:center;
@@ -12,6 +13,17 @@
 
 <body>
     <h1>Traitor Chess</h1>
+    <div class = "rules">
+      <h2>How To Play</h2>
+      <div class="text">
+        <p>Welcome to Traitor Chess! This game puts a little twist on the traditional game of chess.</p>
+        <p>In Traitor Chess, after a set number of moves, one random piece from both white and black side will change color.</p>
+        <p>The "Impending Doom" countdown tells you when this color change will take place.</p>
+        <p>I'm currently trying to implement a "go back" button so that you can go back a turn if you made a mistake.</p>
+        <p>Currently there is also no "check/mate" system so you have to manually restrict your moves.</p>
+        <p>However, there is pawn swap implemented for when you reach the end of the board as a pawn!</p>
+      </div>
+    </div>
     <canvas id="chessCanvas" width="400" height="400" style="margin-left:37%;"></canvas>
     <div>
       <button id="restart" style="margin-left:48.5%;">restart</button>
@@ -25,12 +37,13 @@
     <div>
       <h3 id="currentteam">Current Turn: WHITE</h3>
     </div>
-    <div id = "pieceselect" style="margin-left:38%;">
+    <div id = "pieceselect" style="margin-left:34%;">
       <p>Select Pawn Swap:
-      <button id="knightbutton"> KNIGHT </button>
-      <button id="bishopbutton"> BISHOP </button>
-      <button id="rookbutton"> ROOK </button>
-      <button id="queenbutton"> QUEEN </button>
+      <button id="knightbutton"> KNIGHT ♘</button>
+      <button id="bishopbutton"> BISHOP ♗</button>
+      <button id="rookbutton"> ROOK ♖</button>
+      <button id="queenbutton"> QUEEN ♕</button>
     </p>
     </div>
+
 </body>
