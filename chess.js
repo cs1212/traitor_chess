@@ -36,8 +36,9 @@ let valid = false;
 let turn = WHITE;
 let turnCounter = 0;
 let counter = 1;
-let flag = true;
+let flag = false;
 
+let prevBoard = [];
 let whiteDeath = [];
 let blackDeath = [];
 
@@ -47,14 +48,18 @@ let blackPieces = [0,0,0,0,0,0,0,0,1,1,2,2,3,3,4];
 document.addEventListener("DOMContentLoaded", onLoad);
 
 function onLoad() {
-    chessCanvas = document.getElementById("chessCanvas");
-    chessCtx = chessCanvas.getContext("2d");
-    chessCanvas.addEventListener("click", boardClick);
-    board = new Board;
-    drawBoard();
-    drawPieces();
-    document.getElementById("restart").onclick=restartGame;
-    document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);
+  chessCanvas = document.getElementById("chessCanvas");
+  chessCtx = chessCanvas.getContext("2d");
+  chessCanvas.addEventListener("click", boardClick);
+  board = new Board;
+  drawBoard();
+  drawPieces();
+  document.getElementById("restart").onclick=restartGame;
+  document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);
+  document.getElementById("knightbutton").onclick=knightSwap;
+  document.getElementById("bishopbutton").onclick=bishopSwap;
+  document.getElementById("rookbutton").onclick=rookSwap;
+  document.getElementById("queenbutton").onclick=queenSwap;
 }
 
 function boardClick(event){
@@ -86,7 +91,6 @@ function boardClick(event){
       if(checkMoves(firstPiece,square,oldX,oldY,x,y)){
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
-
         if (turn == WHITE){
           turn = BLACK;
           turnCounter += 1;
@@ -464,8 +468,21 @@ function checkKingMoves(piece, secondpiece, oldx, oldy, newx, newy){
 
 function restartGame(){
   board = new Board;
+  turnCounter = 0;
+  firstClick = true;
+  firstPiece = -1;
+  firstClickCoord = [];
+  valid = false;
+  turn = WHITE;
+  turnCounter = 0;
+  counter = 1;
+  flag = false;
+  restart = false;
   drawBoard();
   drawPieces();
+  document.getElementById("turncounter").innerHTML = "Turn: 1";
+  document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);
+  document.getElementsById("currentteam").innerHTML = "Current Turn: WHITE";
 }
 
 function drawBoard() {
@@ -566,6 +583,86 @@ function changePieces(wp, wd, bp, bd, b){
       else if (b.tiles[i][j].color == WHITE && b.tiles[i][j].piece == wval && bcounter == 0){
         b.tiles[i][j].color = BLACK;
         bcounter = 1;
+      }
+    }
+  }
+}
+
+function knightSwap(){
+  for (let i = 0; i < BOARD_HEIGHT; i++) {
+    for (let j = 0; j < BOARD_WIDTH; j++) {
+      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+        board.tiles[i][j].piece = 1;
+        drawBoard();
+        drawPieces();
+        if (i == 0){
+          blackPieces.splice(blackPieces.indexOf(0),1);
+          blackPieces.push(1)
+        }
+        else{
+          whitePieces.splice(whitePieces.indexOf(0),1);
+          whitePieces.push(1);
+        }
+      }
+    }
+  }
+}
+
+function bishopSwap(){
+  for (let i = 0; i < BOARD_HEIGHT; i++) {
+    for (let j = 0; j < BOARD_WIDTH; j++) {
+      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+        board.tiles[i][j].piece = 2;
+        drawBoard();
+        drawPieces();
+        if (i == 0){
+          blackPieces.splice(blackPieces.indexOf(0),1);
+          blackPieces.push(2)
+        }
+        else{
+          whitePieces.splice(whitePieces.indexOf(0),1);
+          whitePieces.push(2);
+        }
+      }
+    }
+  }
+}
+
+function rookSwap(){
+  for (let i = 0; i < BOARD_HEIGHT; i++) {
+    for (let j = 0; j < BOARD_WIDTH; j++) {
+      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+        board.tiles[i][j].piece = 3;
+        drawBoard();
+        drawPieces();
+        if (i == 0){
+          blackPieces.splice(blackPieces.indexOf(0),1);
+          blackPieces.push(3)
+        }
+        else{
+          whitePieces.splice(whitePieces.indexOf(0),1);
+          whitePieces.push(3);
+        }
+      }
+    }
+  }
+}
+
+function queenSwap(){
+  for (let i = 0; i < BOARD_HEIGHT; i++) {
+    for (let j = 0; j < BOARD_WIDTH; j++) {
+      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+        board.tiles[i][j].piece = 4;
+        drawBoard();
+        drawPieces();
+        if (i == 0){
+          blackPieces.splice(blackPieces.indexOf(0),1);
+          blackPieces.push(4)
+        }
+        else{
+          whitePieces.splice(whitePieces.indexOf(0),1);
+          whitePieces.push(4);
+        }
       }
     }
   }
