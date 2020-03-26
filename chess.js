@@ -38,7 +38,7 @@ let turnCounter = 0;
 let counter = 1;
 let flag = false;
 
-let prevBoard = [];
+//let prevBoard = [];
 let whiteDeath = [];
 let blackDeath = [];
 
@@ -88,10 +88,9 @@ function boardClick(event){
       let oldY = firstClickCoord[1];
       console.log("second click"); // TODO: get rid of this later
       console.log(x,y);
-      if(checkMoves(firstPiece,square,oldX,oldY,x,y)){
+      if(checkMoves(firstPiece,square,oldX,oldY,x,y,board)){
         //let cloneboard = Object.assign({},board);
         //prevBoard.push(cloneboard);
-        console.log(prevBoard);
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (turn == WHITE){
@@ -135,7 +134,11 @@ function boardClick(event){
 
 }
 
-function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
+function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy, b){
+  /*
+  Var:
+    b: (class Board) used for is_check()
+  */
   switch(firstpiece.piece){
     case 0:
       //check pawn moves
@@ -159,7 +162,19 @@ function checkMoves(firstpiece, secondpiece, oldx, oldy, newx, newy){
      break;
     case 5:
       //check king moves
-      return checkKingMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
+      //return checkKingMoves(firstpiece,secondpiece,oldx,oldy,newx,newy);
+      if (checkKingMoves(firstpiece,secondpiece,oldx,oldy,newx,newy)){
+        let m = is_check(b, firstpiece, newx, newy);
+        for (let a=0; a<m.length; a++){
+          if (newy == m[a][0] && newx == m[a][1]){
+            return false;
+          }
+        }
+        return true;
+      }
+      else{
+        return false;
+      }
       break;
     default:
 
@@ -462,11 +477,151 @@ function checkKingMoves(piece, secondpiece, oldx, oldy, newx, newy){
   x = Math.abs(oldx-newx);
   y = Math.abs(oldy-newy);
   if (x > 1 || y > 1){
-    return false
+    return false;
   }
   else{
     return true;
   }
+}
+
+function is_check(b, firstpiece, newx, newy){
+  let moves = [];
+  let c = firstpiece.color;
+  for (let i=0; i<8; i++){
+    for (let j=0; j<8; j++){
+      if (b.tiles[i][j].color != c){
+        let tempi;
+        let tempj;
+        switch(b.tiles[i][j].piece){
+          case 0:
+            if (c == WHITE){
+              moves.push([i+1,j-1],[i+1,j+1]);
+            }
+            else{
+              moves.push([i-1,j-1],[i-1,j+1]);
+            }
+            break;
+          case 1:
+            moves.push([i-1,j-2],[i-1,j+2],[i+1,j-2],[i+1,j-2]);
+            break;
+          case 2:
+            tempi = i+1;
+            tempj = j+1;
+            while(tempi < 8 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves1");
+              moves.push([tempi,tempj]);
+              tempi += 1;
+              tempj += 1;
+            }
+            tempi = i+1;
+            tempj = j-1;
+            while(tempi < 8 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves2");
+              moves.push([tempi,tempj]);
+              tempi += 1;
+              tempj -= 1;
+            }
+            tempi = i-1;
+            tempj = j+1;
+            while(tempi >= 0 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves3");
+              moves.push([tempi,tempj]);
+              tempi -= 1;
+              tempj += 1;
+            }
+            tempi = i-1;
+            tempj = j-1;
+            while(tempi >= 0 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves4");
+              moves.push([tempi,tempj]);
+              tempi -= 1;
+              tempj -= 1;
+            }
+            break;
+          case 3:
+            tempi = i+1;
+            while(tempi < 8 && b.tiles[tempi][j].piece == EMPTY){
+              moves.push([tempi,j]);
+              tempi += 1;
+            }
+            tempi = i-1;
+            while(tempi >= 0 && b.tiles[tempi][j].piece == EMPTY){
+              moves.push([tempi,j]);
+              tempi += 1;
+            }
+            tempj = j+1;
+            while(tempj < 8 && b.tiles[i][tempj].piece == EMPTY){
+              moves.push([i,tempj]);
+              tempj += 1;
+            }
+            tempj = j-1;
+            while(tempj >= 0 && b.tiles[i][tempj].piece == EMPTY){
+              moves.push([i,tempj]);
+              tempj -= 1;
+            }
+            break;
+          case 4:
+            tempi = i+1;
+            while(tempi < 8 && b.tiles[tempi][j].piece == EMPTY){
+              moves.push([tempi,j]);
+              tempi += 1;
+            }
+            tempi = i-1;
+            while(tempi >= 0 && b.tiles[tempi][j].piece == EMPTY){
+              moves.push([tempi,j]);
+              tempi += 1;
+            }
+            tempj = j+1;
+            while(tempj < 8 && b.tiles[i][tempj].piece == EMPTY){
+              moves.push([i,tempj]);
+              tempj += 1;
+            }
+            tempj = j-1;
+            while(tempj >= 0 && b.tiles[i][tempj].piece == EMPTY){
+              moves.push([i,tempj]);
+              tempj -= 1;
+            }
+            tempi = i+1;
+            tempj = j+1;
+            while(tempi < 8 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves1");
+              moves.push([tempi,tempj]);
+              tempi += 1;
+              tempj += 1;
+            }
+            tempi = i+1;
+            tempj = j-1;
+            while(tempi < 8 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves2");
+              moves.push([tempi,tempj]);
+              tempi += 1;
+              tempj -= 1;
+            }
+            tempi = i-1;
+            tempj = j+1;
+            while(tempi >= 0 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves3");
+              moves.push([tempi,tempj]);
+              tempi -= 1;
+              tempj += 1;
+            }
+            tempi = i-1;
+            tempj = j-1;
+            while(tempi >= 0 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
+              console.log("checking bishop moves4");
+              moves.push([tempi,tempj]);
+              tempi -= 1;
+              tempj -= 1;
+            }
+            break;
+          case 5:
+            moves.push([i-1,j-1],[i-1,j],[i-1,j+1],[i,j+1],[i,j-1],[i+1,j+1],[i+1,j],[i+1,j-1]);
+            break;
+        }
+      }
+    }
+  }
+  return moves;
 }
 
 function restartGame(){
@@ -488,7 +643,7 @@ function restartGame(){
   document.getElementsById("currentteam").innerHTML = "Current Turn: WHITE";
 }
 
-function drawBoard() {
+function drawBoard(){
     chessCtx.fillStyle = WHITE_TILE_COLOR;
     chessCtx.fillRect(0, 0, BOARD_WIDTH*TILE_SIZE, BOARD_HEIGHT*TILE_SIZE);
 
@@ -501,7 +656,7 @@ function drawBoard() {
     }
 }
 
-function drawTile(x, y, fillStyle) {
+function drawTile(x, y, fillStyle){
     chessCtx.fillStyle = fillStyle;
     chessCtx.fillRect(TILE_SIZE*x, TILE_SIZE*y, TILE_SIZE, TILE_SIZE);
 }
