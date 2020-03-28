@@ -108,7 +108,7 @@ function boardClick(event){
         }
         counter += 1;
         let cloneboard = _.cloneDeep(board);
-        prevBoard.push([cloneboard,turn,turnCounter,counter,whitePieces,blackPieces]);
+        prevBoard.push([cloneboard,turn,turnCounter,counter,whitePieces,blackPieces,teamSwap]);
         //console.log(prevBoard);
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
@@ -129,7 +129,8 @@ function boardClick(event){
 
         updatePieceList(square,whitePieces,whiteDeath,blackPieces,blackDeath);
 
-        if (counter%teamSwap == 0){//TEAMSWAP
+        if ((teamSwap - counter) <= 0){
+        //if (counter%teamSwap == 0){//TEAMSWAP
           changePieces(whitePieces,whiteDeath,blackPieces,blackDeath,board);
           counter = 1;
           teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN;//added this to original traitor counter
@@ -645,10 +646,11 @@ function restartGame(){
   counter = 1;
   flag = false;
   restart = false;
+  teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN;
   drawBoard();
   drawPieces();
   document.getElementById("turncounter").innerHTML = "Turn: 1";
-  document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);
+  document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (teamSwap-1);
   document.getElementById("currentteam").innerHTML = "Current Turn: WHITE";
 }
 
@@ -866,11 +868,13 @@ function goBack(){
     turnCounter = a[2];
     counter = a[3];
     whitePieces = a[4];
-    blackPiecs = a[5];
+    blackPieces = a[5];
+    teamSwap = a[6];
     drawBoard();
     drawPieces();
     document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
-    document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter);
+    //document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter); original traitor counter
+    document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (teamSwap - counter + 1);
     if (turn == WHITE){
       turn = BLACK;
       //turnCounter += 1;
