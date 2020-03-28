@@ -53,6 +53,7 @@ function onLoad() {
   chessCanvas = document.getElementById("chessCanvas");
   chessCtx = chessCanvas.getContext("2d");
   chessCanvas.addEventListener("click", boardClick);
+  //document.getElementById("back").addEventListener("click",goBack);
   board = new Board;
   drawBoard();
   drawPieces();
@@ -65,6 +66,30 @@ function onLoad() {
 }
 
 function boardClick(event){
+  // if (flag){//goback button stuff
+  //   flag = false;
+  //   let a = prevBoard.pop();
+  //   firstClick = true;
+  //   board = a[0];
+  //   turn = a[1];
+  //   turnCounter = a[2];
+  //   counter = a[3];
+  //   drawBoard();
+  //   drawPieces();
+  //   document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
+  //   document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter);
+  //   if (turn == WHITE){
+  //     turn = BLACK;
+  //     turnCounter += 1;
+  //     document.getElementById("currentteam").innerHTML = "Current Turn: BLACK"
+  //   }
+  //   else{
+  //     turn = WHITE;
+  //     document.getElementById("currentteam").innerHTML = "Current Turn: WHITE"
+  //     counter += 1;
+  //   }
+  // }
+
   //this function is for when a board element is clicked
   let chessCanvasX = chessCanvas.getBoundingClientRect().left; //get left board value
   let chessCanvasY = chessCanvas.getBoundingClientRect().top; // get upper board value
@@ -91,11 +116,6 @@ function boardClick(event){
       console.log("second click"); // TODO: get rid of this later
       console.log(x,y);
       if(checkMoves(firstPiece,square,oldX,oldY,x,y,board)){
-        //let cloneboard = Object.assign({},board);
-        let cloneboard = _.cloneDeep(board);
-        prevBoard.push(cloneboard);
-        board.tiles[y][x] = firstPiece;
-        board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (turn == WHITE){
           turn = BLACK;
           turnCounter += 1;
@@ -106,6 +126,11 @@ function boardClick(event){
           document.getElementById("currentteam").innerHTML = "Current Turn: WHITE"
           counter += 1;
         }
+        let cloneboard = _.cloneDeep(board);
+        prevBoard.push([cloneboard,turn,turnCounter,counter,whitePieces,blackPieces]);
+        console.log(prevBoard);
+        board.tiles[y][x] = firstPiece;
+        board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (square.piece == 5){
           console.log('checkmate!');
           let winner;
@@ -633,6 +658,7 @@ function restartGame(){
   firstClick = true;
   firstPiece = -1;
   firstClickCoord = [];
+  prevBoard = [];
   valid = false;
   turn = WHITE;
   turnCounter = 0;
@@ -643,7 +669,7 @@ function restartGame(){
   drawPieces();
   document.getElementById("turncounter").innerHTML = "Turn: 1";
   document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);
-  document.getElementsById("currentteam").innerHTML = "Current Turn: WHITE";
+  document.getElementById("currentteam").innerHTML = "Current Turn: WHITE";
 }
 
 function drawBoard(){
@@ -825,6 +851,41 @@ function queenSwap(){
           whitePieces.push(4);
         }
       }
+    }
+  }
+}
+
+function goBack(){
+  /*
+  This function is for the 'back' button
+  */
+  if (prevBoard.length > 0){
+    let a = prevBoard.pop();
+    console.log(a);
+    firstClick = true;
+    board = a[0];
+    turn = a[1];
+    turnCounter = a[2];
+    counter = a[3];
+    whitePieces = a[4];
+    blackPiecs = a[5];
+    // if (turn == WHITE){
+    //   turnCounter -= 1;
+    // }
+    drawBoard();
+    drawPieces();
+    document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
+    document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter);
+    if (turn == WHITE){
+      turn = BLACK;
+      //turnCounter += 1;
+      document.getElementById("currentteam").innerHTML = "Current Turn: BLACK"
+    }
+    else{
+      turn = WHITE;
+      document.getElementById("currentteam").innerHTML = "Current Turn: WHITE"
+      //counter += 1;
+      turnCounter -= 1; //an extra turnCounter keeps getting added so i'm subtracting by 1 to counter it
     }
   }
 }
