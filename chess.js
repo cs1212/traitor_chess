@@ -17,7 +17,7 @@ const QUEEN = 4;
 const KING = 5;
 
 const TEAMSWAP = 7;
-const MAX = 18;
+const MAX = 17;
 const MIN = 14;
 //dictionary of pieces
 const piecesCharacters = {
@@ -29,7 +29,7 @@ const piecesCharacters = {
     5: '♔'
 };
 
-let teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN;
+let teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN; //max and min inclusive
 let chessCanvas;
 let chessCtx;
 let firstClick = true;
