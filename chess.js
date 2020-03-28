@@ -739,12 +739,12 @@ function changePieces(wp, wd, bp, bd, b){
     wp,wd,bd,bp: same as updatePieceList
     b: (class Board)
   */
-  let wmax = wp.length - 1;
-  let bmax = bp.length - 1;
+  let wmax = wp.length;//-1
+  let bmax = bp.length;//-1
 
-  //choose random element in array between 0 and wmax inclusive
-  let wnum = Math.floor(Math.random() * (wmax + 1));
-  let bnum = Math.floor(Math.random() * (bmax + 1));
+  //choose random element in array between 0 and wmax exclusive
+  let wnum = Math.floor(Math.random() * wmax);//wmax+1
+  let bnum = Math.floor(Math.random() * bmax);//bmax+1
   let wval = wp[wnum];
   let bval = bp[bnum];
 
@@ -757,21 +757,40 @@ function changePieces(wp, wd, bp, bd, b){
   wd.push(wval);
   bd.push(bval);
 
-  let wcounter = 0;
-  let bcounter = 0;
+  // let wcounter = 0;
+  // let bcounter = 0;
 
+  let tempWhitePiece = [];
+  let tempBlackPiece = [];
   for (let i = 0; i < BOARD_HEIGHT; i++) {
     for (let j = 0; j < BOARD_WIDTH; j++) {
-      if (b.tiles[i][j].color == BLACK && b.tiles[i][j].piece == bval && wcounter == 0){
-        b.tiles[i][j].color = WHITE;
-        wcounter = 1;
+      if (b.tiles[i][j].color == BLACK && b.tiles[i][j].piece == bval){
+        tempWhitePiece.push([i,j]);
       }
-      else if (b.tiles[i][j].color == WHITE && b.tiles[i][j].piece == wval && bcounter == 0){
-        b.tiles[i][j].color = BLACK;
-        bcounter = 1;
+      else if (b.tiles[i][j].color == WHITE && b.tiles[i][j].piece == wval){
+        tempBlackPiece.push([i,j]);
       }
     }
   }
+  wnum = Math.floor(Math.random() * (tempWhitePiece.length));
+  bnum = Math.floor(Math.random() * (tempBlackPiece.length));
+  let a = tempWhitePiece[wnum];
+  b.tiles[a[0]][a[1]].color = WHITE;
+  a = tempBlackPiece[bnum];
+  b.tiles[a[0]][a[1]].color = BLACK;
+
+  // for (let i = 0; i < BOARD_HEIGHT; i++) {
+  //   for (let j = 0; j < BOARD_WIDTH; j++) {
+  //     if (b.tiles[i][j].color == BLACK && b.tiles[i][j].piece == bval && wcounter == 0){
+  //       b.tiles[i][j].color = WHITE;
+  //       wcounter = 1;
+  //     }
+  //     else if (b.tiles[i][j].color == WHITE && b.tiles[i][j].piece == wval && bcounter == 0){
+  //       b.tiles[i][j].color = BLACK;
+  //       bcounter = 1;
+  //     }
+  //   }
+  // }
 }
 
 function knightSwap(){
