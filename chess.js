@@ -38,7 +38,9 @@ let turnCounter = 0;
 let counter = 1;
 let flag = false;
 
-//let prevBoard = [];
+//var deepclone = require('lodash');
+//console.log(_.cloneDeep);
+let prevBoard = [];
 let whiteDeath = [];
 let blackDeath = [];
 
@@ -90,7 +92,8 @@ function boardClick(event){
       console.log(x,y);
       if(checkMoves(firstPiece,square,oldX,oldY,x,y,board)){
         //let cloneboard = Object.assign({},board);
-        //prevBoard.push(cloneboard);
+        let cloneboard = _.cloneDeep(board);
+        prevBoard.push(cloneboard);
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (turn == WHITE){
