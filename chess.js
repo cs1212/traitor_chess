@@ -15,8 +15,10 @@ const BISHOP = 2;
 const ROOK = 3;
 const QUEEN = 4;
 const KING = 5;
-const TEAMSWAP = 7;
 
+const TEAMSWAP = 7;
+const MAX = 18;
+const MIN = 14;
 //dictionary of pieces
 const piecesCharacters = {
     0: '♙',
@@ -27,6 +29,7 @@ const piecesCharacters = {
     5: '♔'
 };
 
+let teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN;
 let chessCanvas;
 let chessCtx;
 let firstClick = true;
@@ -58,7 +61,8 @@ function onLoad() {
   drawBoard();
   drawPieces();
   document.getElementById("restart").onclick=restartGame;
-  document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);
+  //document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP-1);// TODO:original traitor counter
+  document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (teamSwap-1);
   document.getElementById("knightbutton").onclick=knightSwap;
   document.getElementById("bishopbutton").onclick=bishopSwap;
   document.getElementById("rookbutton").onclick=rookSwap;
@@ -66,30 +70,6 @@ function onLoad() {
 }
 
 function boardClick(event){
-  // if (flag){//goback button stuff
-  //   flag = false;
-  //   let a = prevBoard.pop();
-  //   firstClick = true;
-  //   board = a[0];
-  //   turn = a[1];
-  //   turnCounter = a[2];
-  //   counter = a[3];
-  //   drawBoard();
-  //   drawPieces();
-  //   document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
-  //   document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter);
-  //   if (turn == WHITE){
-  //     turn = BLACK;
-  //     turnCounter += 1;
-  //     document.getElementById("currentteam").innerHTML = "Current Turn: BLACK"
-  //   }
-  //   else{
-  //     turn = WHITE;
-  //     document.getElementById("currentteam").innerHTML = "Current Turn: WHITE"
-  //     counter += 1;
-  //   }
-  // }
-
   //this function is for when a board element is clicked
   let chessCanvasX = chessCanvas.getBoundingClientRect().left; //get left board value
   let chessCanvasY = chessCanvas.getBoundingClientRect().top; // get upper board value
@@ -101,8 +81,8 @@ function boardClick(event){
   let square = board.tiles[y][x];
   //first click must be a chess piece
   if (square.filled && firstClick == true && square.color == turn){
-    console.log("first click"); // TODO: get rid of this later
-    console.log(x,y);
+    console.log("first click");
+    //console.log(x,y);
     firstClickCoord = [x,y];
     firstClick = false;
     firstPiece = square;
@@ -113,8 +93,8 @@ function boardClick(event){
       firstClick = true;
       let oldX = firstClickCoord[0];
       let oldY = firstClickCoord[1];
-      console.log("second click"); // TODO: get rid of this later
-      console.log(x,y);
+      console.log("second click");
+      //console.log(x,y);
       if(checkMoves(firstPiece,square,oldX,oldY,x,y,board)){
         if (turn == WHITE){
           turn = BLACK;
@@ -124,15 +104,16 @@ function boardClick(event){
         else{
           turn = WHITE;
           document.getElementById("currentteam").innerHTML = "Current Turn: WHITE"
-          counter += 1;
+          //counter += 1; original traitor counter
         }
+        counter += 1;
         let cloneboard = _.cloneDeep(board);
         prevBoard.push([cloneboard,turn,turnCounter,counter,whitePieces,blackPieces]);
-        console.log(prevBoard);
+        //console.log(prevBoard);
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (square.piece == 5){
-          console.log('checkmate!');
+          console.log('King Dead')
           let winner;
           if (turn == WHITE){
             winner = "BLACK";
@@ -141,17 +122,21 @@ function boardClick(event){
             winner = "WHITE";
           }
           document.getElementById("currentteam").innerHTML = "Winner: " + winner;
+          drawBoard();
+          drawPieces();
           return null;
         }
 
         updatePieceList(square,whitePieces,whiteDeath,blackPieces,blackDeath);
 
-        if (counter%TEAMSWAP == 0){
+        if (counter%teamSwap == 0){//TEAMSWAP
           changePieces(whitePieces,whiteDeath,blackPieces,blackDeath,board);
           counter = 1;
+          teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN;//added this to original traitor counter
         }
         document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
-        document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter);
+        //document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter); //original traitor counter
+        document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (teamSwap - counter);
         drawBoard();
         drawPieces();
       }
@@ -366,7 +351,7 @@ function checkRookMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go left
     if (h > 0){
       for (let i = 1; i <= Math.abs(h); i++){
-        if (board.tiles[oldy][oldx - i].filled && i != Math.abs(h)){ // TODO: finish this
+        if (board.tiles[oldy][oldx - i].filled && i != Math.abs(h)){
           return false;
         }
       }
@@ -374,7 +359,7 @@ function checkRookMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go right
     else{
       for (let i = 1; i <= Math.abs(h); i++){
-        if (board.tiles[oldy][oldx + i].filled && i != Math.abs(h)){ // TODO: finish this
+        if (board.tiles[oldy][oldx + i].filled && i != Math.abs(h)){
           return false;
         }
       }
@@ -387,7 +372,7 @@ function checkRookMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go up
     if (v > 0){
       for (let i = 1; i <= Math.abs(v); i++){
-        if (board.tiles[oldy-i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+        if (board.tiles[oldy-i][oldx].filled && i != Math.abs(v)){
           return false;
         }
       }
@@ -395,7 +380,7 @@ function checkRookMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go down
     else{
       for (let i = 1; i <= Math.abs(v); i++){
-        if (board.tiles[oldy+i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+        if (board.tiles[oldy+i][oldx].filled && i != Math.abs(v)){
           return false;
         }
       }
@@ -414,7 +399,7 @@ function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go left
     if (h > 0){
       for (let i = 1; i <= Math.abs(h); i++){
-        if (board.tiles[oldy][oldx - i].filled && i != Math.abs(h)){ // TODO: finish this
+        if (board.tiles[oldy][oldx - i].filled && i != Math.abs(h)){
           return false;
         }
       }
@@ -422,7 +407,7 @@ function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go right
     else{
       for (let i = 1; i <= Math.abs(h); i++){
-        if (board.tiles[oldy][oldx + i].filled && i != Math.abs(h)){ // TODO: finish this
+        if (board.tiles[oldy][oldx + i].filled && i != Math.abs(h)){
           return false;
         }
       }
@@ -435,7 +420,7 @@ function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go up
     if (v > 0){
       for (let i = 1; i <= Math.abs(v); i++){
-        if (board.tiles[oldy-i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+        if (board.tiles[oldy-i][oldx].filled && i != Math.abs(v)){
           return false;
         }
       }
@@ -443,7 +428,7 @@ function checkQueenMoves(piece, secondpiece, oldx, oldy, newx, newy){
     //go down
     else{
       for (let i = 1; i <= Math.abs(v); i++){
-        if (board.tiles[oldy+i][oldx].filled && i != Math.abs(v)){ // TODO: finish this
+        if (board.tiles[oldy+i][oldx].filled && i != Math.abs(v)){
           return false;
         }
       }
@@ -611,7 +596,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i+1;
             tempj = j+1;
             while(tempi < 8 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves1");
               moves.push([tempi,tempj]);
               tempi += 1;
               tempj += 1;
@@ -619,7 +603,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i+1;
             tempj = j-1;
             while(tempi < 8 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves2");
               moves.push([tempi,tempj]);
               tempi += 1;
               tempj -= 1;
@@ -627,7 +610,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i-1;
             tempj = j+1;
             while(tempi >= 0 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves3");
               moves.push([tempi,tempj]);
               tempi -= 1;
               tempj += 1;
@@ -635,7 +617,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i-1;
             tempj = j-1;
             while(tempi >= 0 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves4");
               moves.push([tempi,tempj]);
               tempi -= 1;
               tempj -= 1;
@@ -879,7 +860,6 @@ function goBack(){
   */
   if (prevBoard.length > 0){
     let a = prevBoard.pop();
-    console.log(a);
     firstClick = true;
     board = a[0];
     turn = a[1];
