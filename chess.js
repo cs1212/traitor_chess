@@ -513,6 +513,9 @@ function checkKingMoves(piece, secondpiece, oldx, oldy, newx, newy){
 }
 
 function is_check(b, firstpiece, newx, newy){
+  /*
+  This function checks if the king is checked.
+  */
   let moves = [];
   let c = firstpiece.color;
   for (let i=0; i<8; i++){
@@ -536,7 +539,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i+1;
             tempj = j+1;
             while(tempi < 8 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves1");
               moves.push([tempi,tempj]);
               tempi += 1;
               tempj += 1;
@@ -544,7 +546,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i+1;
             tempj = j-1;
             while(tempi < 8 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves2");
               moves.push([tempi,tempj]);
               tempi += 1;
               tempj -= 1;
@@ -552,7 +553,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i-1;
             tempj = j+1;
             while(tempi >= 0 && tempj < 8 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves3");
               moves.push([tempi,tempj]);
               tempi -= 1;
               tempj += 1;
@@ -560,7 +560,6 @@ function is_check(b, firstpiece, newx, newy){
             tempi = i-1;
             tempj = j-1;
             while(tempi >= 0 && tempj >= 0 && b.tiles[tempi][tempj].piece == EMPTY){
-              console.log("checking bishop moves4");
               moves.push([tempi,tempj]);
               tempi -= 1;
               tempj -= 1;
@@ -778,7 +777,7 @@ function changePieces(wp, wd, bp, bd, b){
 function knightSwap(){
   for (let i = 0; i < BOARD_HEIGHT; i++) {
     for (let j = 0; j < BOARD_WIDTH; j++) {
-      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+      if (((i == 0 && board.tiles[i][j].color == WHITE)||(i == 7 && board.tiles[i][j].color == BLACK)) && board.tiles[i][j].piece == 0){
         board.tiles[i][j].piece = 1;
         drawBoard();
         drawPieces();
@@ -798,7 +797,7 @@ function knightSwap(){
 function bishopSwap(){
   for (let i = 0; i < BOARD_HEIGHT; i++) {
     for (let j = 0; j < BOARD_WIDTH; j++) {
-      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+      if (((i == 0 && board.tiles[i][j].color == WHITE)||(i == 7 && board.tiles[i][j].color == BLACK)) && board.tiles[i][j].piece == 0){
         board.tiles[i][j].piece = 2;
         drawBoard();
         drawPieces();
@@ -818,7 +817,7 @@ function bishopSwap(){
 function rookSwap(){
   for (let i = 0; i < BOARD_HEIGHT; i++) {
     for (let j = 0; j < BOARD_WIDTH; j++) {
-      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+      if (((i == 0 && board.tiles[i][j].color == WHITE)||(i == 7 && board.tiles[i][j].color == BLACK)) && board.tiles[i][j].piece == 0){
         board.tiles[i][j].piece = 3;
         drawBoard();
         drawPieces();
@@ -838,7 +837,7 @@ function rookSwap(){
 function queenSwap(){
   for (let i = 0; i < BOARD_HEIGHT; i++) {
     for (let j = 0; j < BOARD_WIDTH; j++) {
-      if ((i == 0 || i == 7) && board.tiles[i][j].piece == 0){
+      if (((i == 0 && board.tiles[i][j].color == WHITE)||(i == 7 && board.tiles[i][j].color == BLACK)) && board.tiles[i][j].piece == 0){
         board.tiles[i][j].piece = 4;
         drawBoard();
         drawPieces();
@@ -869,9 +868,6 @@ function goBack(){
     counter = a[3];
     whitePieces = a[4];
     blackPiecs = a[5];
-    // if (turn == WHITE){
-    //   turnCounter -= 1;
-    // }
     drawBoard();
     drawPieces();
     document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
