@@ -109,7 +109,7 @@ function boardClick(event){
         counter += 1;
         let cloneboard = _.cloneDeep(board);
         prevBoard.push([cloneboard,turn,turnCounter,counter,whitePieces,blackPieces,teamSwap]);
-        console.log(prevBoard); // TODO: debug
+        //console.log(prevBoard);
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (square.piece == 5){
