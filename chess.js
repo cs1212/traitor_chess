@@ -36,8 +36,8 @@ let firstClick = true;
 let firstPiece = -1;
 let firstClickCoord = [];
 let valid = false;
-let turn = WHITE;
-let turnCounter = 0;
+let turn = WHITE; //keeps track which color is currently moving
+let turnCounter = 0; //keeps track of turn #. Only updates every white turn
 let counter = 1; //keeps track of how many turns until teamSwap
 let flag = false;
 
@@ -129,6 +129,7 @@ function boardClick(event){
 
         updatePieceList(square,whitePieces,whiteDeath,blackPieces,blackDeath);
 
+        //check if we reached impending doom
         if ((teamSwap - counter) <= 0){
         //if (counter%teamSwap == 0){//TEAMSWAP
           changePieces(whitePieces,whiteDeath,blackPieces,blackDeath,board);
@@ -642,7 +643,6 @@ function restartGame(){
   prevBoard = [];
   valid = false;
   turn = WHITE;
-  turnCounter = 0;
   counter = 1;
   flag = false;
   restart = false;
