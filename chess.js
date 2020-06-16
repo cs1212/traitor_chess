@@ -29,7 +29,7 @@ const piecesCharacters = {
     5: '♔'
 };
 
-let teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN; //max and min inclusive
+let teamSwap = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN; //max and min inclusive, determines when to swap pieces
 let chessCanvas;
 let chessCtx;
 let firstClick = true;
@@ -38,7 +38,7 @@ let firstClickCoord = [];
 let valid = false;
 let turn = WHITE;
 let turnCounter = 0;
-let counter = 1;
+let counter = 1; //keeps track of how many turns until teamSwap
 let flag = false;
 
 //var deepclone = require('lodash');
@@ -109,7 +109,7 @@ function boardClick(event){
         counter += 1;
         let cloneboard = _.cloneDeep(board);
         prevBoard.push([cloneboard,turn,turnCounter,counter,whitePieces,blackPieces,teamSwap]);
-        //console.log(prevBoard);
+        console.log(prevBoard); // TODO: debug
         board.tiles[y][x] = firstPiece;
         board.tiles[oldY][oldX] = new Tile(EMPTY,EMPTY,false);
         if (square.piece == 5){
@@ -875,6 +875,10 @@ function goBack(){
     document.getElementById("turncounter").innerHTML = "Turn: " + turnCounter;
     //document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (TEAMSWAP - counter); original traitor counter
     document.getElementById("swapcounter").innerHTML = "Impending Doom in: " + (teamSwap - counter + 1);
+    //if counter is currently 2, then after this function we move a piece and counter will increment and become 3 but
+    //we want it to stay 2 so we decrement by 1 here
+    counter = counter - 1;
+
     if (turn == WHITE){
       turn = BLACK;
       //turnCounter += 1;
